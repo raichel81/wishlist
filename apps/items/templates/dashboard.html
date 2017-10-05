@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+
+{% block content %}
+	{% if request.user.is_authenticated %}
+		<h2>Your Wish List</h2>
+		<table class="table">
+			<thead class="thead-inverse">
+				<tr>
+					<th>Item</th>
+					<th>Added by</th>
+					<th>Date Added</th>
+					<th>Action</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for item in myitems %}
+					<tr>
+						<td><a href="{% url 'items:wish_items' item.id %}">{{ item.name }}</a></td>
+						<td class="align-middle">{{ item.created_by }}</td>
+                        <td class="align-middle">{{ item.created_at.date }}</td>
+                        {% if item.created_by.id == user.id%}
+                        <td><a href="{% url 'items:delete' item.id %}">Delete</a></td>
+                        {% else %}
+                        <td><a href="{% url 'items:remove' item.id %}">Remove from my Wishlist</a></td>
+                        {% endif %}        
+                    </tr>                
+				{% endfor %}
+			</tbody>
+        </table>
+        <h2>Other Users' Wish List</h2>
+		<table class="table">
+			<thead class="thead-inverse">
+				<tr>
+					<th>Item</th>
+					<th>Added by</th>
+					<th>Date Added</th>
+					<th>Action</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for item in othersitems %}
+					<tr>
+						<td><a href="{% url 'items:wish_items' item.id %}">{{ item.name }}</a></td>
+						<td class="align-middle">{{ item.created_by }}</td>
+                        <td class="align-middle">{{ item.created_at.date }}</td>
+                        <td><a href="{% url 'items:add' item.id %}">Add to my Wishlist</a></td>      
+                    </tr>                
+				{% endfor %}
+			</tbody>
+		</table>
+    <a href="{% url 'items:create' %}">Add Item</a>
+    {% endif %}
+{% endblock %}
